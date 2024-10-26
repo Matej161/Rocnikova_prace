@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
+    public Transform groundCheck;
+    public LayerMask groundLayer;
     [SerializeField] private TrailRenderer tr;
 
     //movement
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
     }
 
-    private bool IsGrounded()
+    public bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
@@ -92,6 +92,11 @@ public class PlayerMovement : MonoBehaviour
             localsScale.x *= -1f;
             transform.localScale = localsScale;
         }
+    }
+
+    public bool canShoot()
+    {
+        return IsGrounded();
     }
 
     private IEnumerator Dash()
@@ -109,4 +114,5 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
+
 }
