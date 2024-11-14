@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    private PlayerMovement playerMovement;
+    /*private PlayerMovement playerMovement;
     private Animator anim;
     [SerializeField] private float shootCooldown;
     private float cooldownTimer = float.MaxValue;
@@ -29,5 +29,5 @@ public class PlayerShooting : MonoBehaviour
     {
         anim.SetTrigger("shoot");
         cooldownTimer = 0;
-    }
+    }*/
 }

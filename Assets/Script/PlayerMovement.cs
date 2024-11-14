@@ -25,6 +25,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashingTime;
     [SerializeField] private float dashingPower;
 
+    Animator animator;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     void Update()
     {
         if (isDashing)
@@ -76,6 +83,9 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing) return;
 
         rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
+
+        animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("yVelocity", rb.velocity.y);
     }
 
     public bool IsGrounded()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    /*[SerializeField] private float speed;
     private bool hit;
     private float direction;
 
@@ -38,6 +38,13 @@ public class Projectile : MonoBehaviour
 
         float localScaleX = transform.localScale.x;
         if (Mathf.Sign(localScaleX) != _direction);
+            localScaleX = -localScaleX;
 
+        transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
     }
+
+    private void Deactivate()
+    {
+        gameObject.SetActive(false);
+    }*/
 }
