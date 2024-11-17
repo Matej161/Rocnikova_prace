@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundLayer;
     [SerializeField] private TrailRenderer tr;
 
+    bool isOnGround = true;
+
     //movement
     private float horizontal;
     private bool isFacingRight = true;
@@ -41,18 +43,32 @@ public class PlayerMovement : MonoBehaviour
 
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        if (IsGrounded() && !Input.GetButton("Jump"))
+        bool wasOnGround = isOnGround;
+        isOnGround = IsGrounded();
+
+        //animator.SetBool("isJumping", !isOnGround);
+
+        /*if (isOnGround && !Input.GetButton("Jump"))
         {
             doubleJump = false;
+        }*/
+
+        if (isOnGround && !wasOnGround)
+        {
+            animator.SetBool("isJumping", false); // Transition directly to idle
+        }
+        else if (!isOnGround && wasOnGround)
+        {
+            animator.SetBool("isJumping", true); // Transition to jump/fall
         }
 
         if (Input.GetButtonDown("Jump"))
         {
-            if (IsGrounded() || doubleJump)
+            if (IsGrounded() /*|| doubleJump*/)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
 
-                doubleJump = !doubleJump;
+                //doubleJump = !doubleJump;
             }
         }
 
@@ -123,6 +139,12 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        isOnGround = false;
+        animator.SetBool("isJumping", !isOnGround);
     }
 
 }
