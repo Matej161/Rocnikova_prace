@@ -53,14 +53,14 @@ public class PlayerMovement : MonoBehaviour
             doubleJump = false;
         }*/
 
-        if (isOnGround && !wasOnGround)
+        /*if (isOnGround && !wasOnGround)
         {
             animator.SetBool("isJumping", false); // Transition directly to idle
         }
         else if (!isOnGround && wasOnGround)
         {
             animator.SetBool("isJumping", true); // Transition to jump/fall
-        }
+        }*/
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -100,8 +100,8 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
 
-        animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
-        animator.SetFloat("yVelocity", rb.velocity.y);
+        /*animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("yVelocity", rb.velocity.y);*/
     }
 
     public bool IsGrounded()
@@ -144,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         isOnGround = false;
-        animator.SetBool("isJumping", !isOnGround);
+        //animator.SetBool("isJumping", !isOnGround);
     }
 
 }
