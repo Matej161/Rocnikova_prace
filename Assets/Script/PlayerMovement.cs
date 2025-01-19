@@ -9,8 +9,6 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundLayer;
     [SerializeField] private TrailRenderer tr;
 
-    bool isOnGround = true;
-
     //movement
     private float horizontal;
     private bool isFacingRight = true;
@@ -27,10 +25,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashingTime;
     [SerializeField] private float dashingPower;
 
-    Animator animator;
+    public Animator animator;
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
 
@@ -41,35 +40,27 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if (IsGrounded())
+        {
+            animator.ResetTrigger("jump");
+            animator.SetBool("falling", false);
+        }
+
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        bool wasOnGround = isOnGround;
-        isOnGround = IsGrounded();
+        animator.SetFloat("Speed", Mathf.Abs(horizontal));
 
-        //animator.SetBool("isJumping", !isOnGround);
-
-        /*if (isOnGround && !Input.GetButton("Jump"))
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            doubleJump = false;
-        }*/
+            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
 
-        /*if (isOnGround && !wasOnGround)
-        {
-            animator.SetBool("isJumping", false); // Transition directly to idle
+            //spusti jump animaci
+            animator.SetTrigger("jump");
         }
-        else if (!isOnGround && wasOnGround)
-        {
-            animator.SetBool("isJumping", true); // Transition to jump/fall
-        }*/
 
-        if (Input.GetButtonDown("Jump"))
+        if(rb.velocity.y < 0)
         {
-            if (IsGrounded() /*|| doubleJump*/)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
-
-                //doubleJump = !doubleJump;
-            }
+            animator.SetBool("falling", true);
         }
 
         if (!IsGrounded())
@@ -84,6 +75,8 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            animator.SetBool("falling", true);
+            animator.ResetTrigger("jump");
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
@@ -92,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Flip();
+
     }
 
     private void FixedUpdate()
@@ -102,6 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
         /*animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("yVelocity", rb.velocity.y);*/
+        HandleLayers();
     }
 
     public bool IsGrounded()
@@ -120,11 +115,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public bool canShoot()
-    {
-        return IsGrounded();
-    }
-
     private IEnumerator Dash()
     {
         canDash = false;
@@ -141,10 +131,16 @@ public class PlayerMovement : MonoBehaviour
         canDash = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void HandleLayers()
     {
-        isOnGround = false;
-        //animator.SetBool("isJumping", !isOnGround);
+        if (!IsGrounded())
+        {
+            animator.SetLayerWeight(1, 1);
+        }
+        else if (IsGrounded())
+        {
+            animator.SetLayerWeight(1, 0);
+        }
     }
 
 }
