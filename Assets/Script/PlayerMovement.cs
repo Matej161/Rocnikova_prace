@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     private float horizontal;
     private bool isFacingRight = true;
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float spritMultiplier = 2f;
+    [SerializeField] private float currentSpeed;
      
     //jump
     private bool doubleJump;
@@ -37,7 +39,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
+            animator.SetBool("IsDashing", true);
             return;
+        }
+
+        if (!isDashing)
+        {
+            animator.SetBool("IsDashing", false);
         }
 
         if (IsGrounded())
@@ -84,6 +92,19 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(Dash());
         }
 
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            currentSpeed = moveSpeed * spritMultiplier;
+            animator.SetTrigger("IsSprinting");
+            animator.ResetTrigger("NotSprinting");
+        }
+        else
+        {
+            currentSpeed = moveSpeed;
+            animator.SetTrigger("NotSprinting");
+            animator.ResetTrigger("IsSprinting");
+        }
+
         Flip();
 
     }
@@ -92,10 +113,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing) return;
 
-        rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
 
-        /*animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
-        animator.SetFloat("yVelocity", rb.velocity.y);*/
         HandleLayers();
     }
 
