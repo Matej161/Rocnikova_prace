@@ -891,6 +891,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   attackDamage: 40
+  attackRate: 2
+  isAttacking: 0
 --- !u!1 &478644861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,7 +1439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1028154331}
-  maxHealth: 100
+  maxHealth: 500
 --- !u!95 &1028154331
 Animator:
   serializedVersion: 5

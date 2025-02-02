@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float spritMultiplier = 2f;
     [SerializeField] private float currentSpeed;
-     
+
     //jump
     private bool doubleJump;
     [SerializeField] private float jumpingPower;
@@ -29,10 +29,13 @@ public class PlayerMovement : MonoBehaviour
 
     public Animator animator;
 
+    private PlayerCombat playerCombat;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        playerCombat = GetComponent<PlayerCombat>();
     }
 
     void Update()
@@ -66,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("jump");
         }
 
-        if(rb.velocity.y < 0)
+        if (rb.velocity.y < 0)
         {
             animator.SetBool("falling", true);
         }
@@ -113,7 +116,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing) return;
 
-        rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
+        if (!playerCombat.isAttacking) rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
+
+        
 
         HandleLayers();
     }

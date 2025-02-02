@@ -16,9 +16,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
-
-        animator.SetTrigger("Hurt");
+        StartCoroutine(Test(damage));
 
         if (currentHealth <= 0)
         {
@@ -34,5 +32,14 @@ public class Enemy : MonoBehaviour
 
         GetComponent<Collider2D>().enabled = false;
         this.enabled = false;
+    }
+
+    IEnumerator Test (int damage)
+    {
+        currentHealth -= damage;
+
+        yield return new WaitForSeconds(0.5f);
+
+        animator.SetTrigger("Hurt");
     }
 }
