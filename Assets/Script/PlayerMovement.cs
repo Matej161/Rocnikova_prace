@@ -116,9 +116,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing) return;
 
-        if (!playerCombat.isAttacking) rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
-
-        
+        if (playerCombat.isAttacking)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
+        }
 
         HandleLayers();
     }

@@ -16,39 +16,76 @@ public class PlayerCombat : MonoBehaviour
     public float attackRate = 2f;
     float nextAttackTime = 0f;
 
-    public bool isAttacking = false;
+    public bool isAttacking;
+
+    [SerializeField] float attackCooldown = 0.5f;
+
+    private HashSet<Enemy> damagedEnemies = new HashSet<Enemy>(); //hashset nebere duplikaty
+
+    private float attackAnimationTime = 0.7f; 
+    private float attackEndTime;
+
+    private PlayerMovement playerMovement;
+
+    private void Start()
+    {
+        playerMovement = GetComponent<PlayerMovement>();
+    }
 
     void Update()
     {
-        if(Time.time >= nextAttackTime)
+        if (Time.time >= nextAttackTime && Input.GetKeyDown(KeyCode.Mouse0) && playerMovement.IsGrounded())
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                Attack();
-                nextAttackTime = Time.time + 1f / attackRate;
-            }
+            isAttacking = true;
+            attackEndTime = Time.time + attackAnimationTime; // When movement should resume
+            StartAttack();
+            nextAttackTime = Time.time + 1f / attackRate;
         }
-    }
 
-    void Attack()
+        if (Time.time >= attackEndTime)
+        {
+            isAttacking = false;
+        }
+
+    }
+    void StartAttack()
     {
         isAttacking = true;
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
+
         animator.SetTrigger("Attack");
+        nextAttackTime = Time.time + attackCooldown;
+    }
 
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+    public void EnableDamage()
+    {
+        damagedEnemies.Clear(); 
+    }
 
-        foreach(Collider2D enemy in hitEnemies)
+    public void DetectEnemies()
+    {
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
+            attackPoint.position,
+            attackRange,
+            enemyLayer
+        );
+
+        foreach (Collider2D enemyCollider in hitEnemies)
         {
-            enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+            Enemy enemy = enemyCollider.GetComponent<Enemy>();  
+            if (enemy != null && !damagedEnemies.Contains(enemy))  //jestli uz je enemy v hashsetu tak se if neprovede
+            {
+                enemy.TakeDamage(attackDamage);
+                damagedEnemies.Add(enemy);
+            }
         }
-        isAttacking = false;
     }
 
 
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null) return;
-
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 }

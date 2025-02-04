@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
     public Animator animator;
 
     public int maxHealth = 100;
-    int currentHealth;
+    [SerializeField] int currentHealth;
 
     void Start()
     {
@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        StartCoroutine(Test(damage));
+        Hurt(damage);
 
         if (currentHealth <= 0)
         {
@@ -34,12 +34,9 @@ public class Enemy : MonoBehaviour
         this.enabled = false;
     }
 
-    IEnumerator Test (int damage)
+    void Hurt(int damage)
     {
         currentHealth -= damage;
-
-        yield return new WaitForSeconds(0.5f);
-
         animator.SetTrigger("Hurt");
     }
 }
