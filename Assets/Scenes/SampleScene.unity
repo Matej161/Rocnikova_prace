@@ -663,18 +663,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 229677528}
-  groundCheck: {fileID: 1327934391}
-  groundLayer:
+  tr: {fileID: 229677525}
+  _groundCheck: {fileID: 1327934391}
+  _groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  tr: {fileID: 229677525}
-  moveSpeed: 9
-  spritMultiplier: 2
-  currentSpeed: 0
-  jumpingPower: 18
-  dashingTime: 0.5
-  dashingPower: 5
   animator: {fileID: 229677532}
+  _moveSpeed: 8
+  _currentSpeed: 0
+  _sprintMultiplier: 2
+  _jumpingPower: 16
+  _dashingPower: 24
+  _dashingTime: 0.2
 --- !u!61 &229677527
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -893,6 +893,7 @@ MonoBehaviour:
   attackDamage: 40
   attackRate: 2
   isAttacking: 0
+  attackCooldown: 0.5
 --- !u!1 &478644861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,6 +1441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1028154331}
   maxHealth: 500
+  currentHealth: 0
 --- !u!95 &1028154331
 Animator:
   serializedVersion: 5

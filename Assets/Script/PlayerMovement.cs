@@ -1,52 +1,50 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private Rigidbody2D rb;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
     [SerializeField] private TrailRenderer tr;
+    [SerializeField] private Transform _groundCheck;
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private Animator animator;
+    private PlayerCombat _playerCombat;
 
-    //movement
-    private float horizontal;
-    private bool isFacingRight = true;
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float spritMultiplier = 2f;
-    [SerializeField] private float currentSpeed;
+    [Header("Movement")]
+    [SerializeField] private float _moveSpeed;
+    [SerializeField] private float _currentSpeed;
+    [SerializeField] private float _sprintMultiplier = 2f;
+    [SerializeField] private float _jumpingPower;
 
-    //jump
-    private bool doubleJump;
-    [SerializeField] private float jumpingPower;
+    [Header("Dash")]
+    [SerializeField] private float _dashingPower;
+    [SerializeField] private float _dashingTime;
+    private float _dashingCooldown = 1f;
+    private bool _canDash = true;
+    private bool _isDashing;
 
-    //dash
-    private bool canDash = true;
-    private bool isDashing;
-    private float dashingCooldown = 1f;
-    [SerializeField] private float dashingTime;
-    [SerializeField] private float dashingPower;
-
-    public Animator animator;
-
-    private PlayerCombat playerCombat;
+    private float _horizontalInput;
+    private bool _isFacingRight = true;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        playerCombat = GetComponent<PlayerCombat>();
+        _playerCombat = GetComponent<PlayerCombat>();
     }
 
     void Update()
     {
-        if (isDashing)
+        if (_isDashing) return;
+
+        if (_isDashing)
         {
             animator.SetBool("IsDashing", true);
             return;
         }
 
-        if (!isDashing)
+        if (!_isDashing)
         {
             animator.SetBool("IsDashing", false);
         }
@@ -57,72 +55,27 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("falling", false);
         }
 
-        horizontal = Input.GetAxisRaw("Horizontal");
-
-        animator.SetFloat("Speed", Mathf.Abs(horizontal));
-
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
-
-            //spusti jump animaci
-            animator.SetTrigger("jump");
-        }
-
         if (rb.velocity.y < 0)
         {
             animator.SetBool("falling", true);
         }
 
-        if (!IsGrounded())
-        {
-            tr.emitting = true;
-        }
-        else
-        {
-            tr.emitting = false;
-        }
-
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-            animator.SetBool("falling", true);
-            animator.ResetTrigger("jump");
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-        {
-            StartCoroutine(Dash());
-        }
-
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            currentSpeed = moveSpeed * spritMultiplier;
-            animator.SetTrigger("IsSprinting");
-            animator.ResetTrigger("NotSprinting");
-        }
-        else
-        {
-            currentSpeed = moveSpeed;
-            animator.SetTrigger("NotSprinting");
-            animator.ResetTrigger("IsSprinting");
-        }
-
-        Flip();
-
+        HandleMovementInput();
+        HandleJumpInput();
+        HandleDashInput();
+        HandleSprintInput();
     }
-
     private void FixedUpdate()
     {
-        if (isDashing) return;
+        if (_isDashing) return;
 
-        if (playerCombat.isAttacking)
+        if (_playerCombat.isAttacking)
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
         }
         else
         {
-            rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(_horizontalInput * _currentSpeed, rb.velocity.y);
         }
 
         HandleLayers();
@@ -130,34 +83,84 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        return Physics2D.OverlapCircle(_groundCheck.position, 0.2f, _groundLayer);
+    }
+
+    private void HandleMovementInput()
+    {
+        _horizontalInput = Input.GetAxisRaw("Horizontal");
+        animator.SetFloat("Speed", Mathf.Abs(_horizontalInput));
+
+        if (!_playerCombat.isAttacking)
+        {
+            Flip();
+        }
+    }
+
+    private void HandleJumpInput()
+    {
+        if (Input.GetButtonDown("Jump") && IsGrounded() && !_playerCombat.isAttacking)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
+            animator.SetTrigger("jump");
+        }
+
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f && !_playerCombat.isAttacking)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            animator.SetBool("falling", true);
+            animator.ResetTrigger("jump");
+        }
+    }
+
+    private void HandleDashInput()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _canDash && !_playerCombat.isAttacking)
+        {
+            StartCoroutine(Dash());
+        }
+    }
+
+    private void HandleSprintInput()
+    {
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            _currentSpeed = _moveSpeed * _sprintMultiplier;
+            animator.SetTrigger("IsSprinting");
+            animator.ResetTrigger("NotSprinting");
+        }
+        else
+        {
+            _currentSpeed = _moveSpeed;
+            animator.SetTrigger("NotSprinting");
+            animator.ResetTrigger("IsSprinting");
+        }
     }
 
     private void Flip()
     {
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+        if (_isFacingRight && _horizontalInput < 0f || !_isFacingRight && _horizontalInput > 0f)
         {
-            isFacingRight = !isFacingRight;
-            Vector3 localsScale = transform.localScale;
-            localsScale.x *= -1f;
-            transform.localScale = localsScale;
+            _isFacingRight = !_isFacingRight;
+            Vector3 newScale = transform.localScale;
+            newScale.x *= -1f;
+            transform.localScale = newScale;
         }
     }
-
     private IEnumerator Dash()
     {
-        canDash = false;
-        isDashing = true;
+        _canDash = false;
+        _isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        rb.velocity = new Vector2(transform.localScale.x * dashingPower, rb.velocity.y);
+        rb.velocity = new Vector2(transform.localScale.x * _dashingPower, rb.velocity.y);
         tr.emitting = true;
-        yield return new WaitForSeconds(dashingTime);
+        yield return new WaitForSeconds(_dashingTime);
         tr.emitting = false;
         rb.gravityScale = originalGravity;
-        isDashing = false;
-        yield return new WaitForSeconds(dashingCooldown);
-        canDash = true;
+        _isDashing = false;
+        yield return new WaitForSeconds(_dashingCooldown);
+        _canDash = true;
     }
 
     private void HandleLayers()
@@ -171,5 +174,4 @@ public class PlayerMovement : MonoBehaviour
             animator.SetLayerWeight(1, 0);
         }
     }
-
 }
