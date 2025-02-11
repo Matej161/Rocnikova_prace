@@ -149,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Dash()
     {
+        animator.SetBool("IsDashing", true);
         _canDash = false;
         _isDashing = true;
         float originalGravity = rb.gravityScale;
@@ -161,6 +162,8 @@ public class PlayerMovement : MonoBehaviour
         _isDashing = false;
         yield return new WaitForSeconds(_dashingCooldown);
         _canDash = true;
+        animator.SetBool("IsDashing", false);
+        animator.Play("PlayerRoll");
     }
 
     private void HandleLayers()
