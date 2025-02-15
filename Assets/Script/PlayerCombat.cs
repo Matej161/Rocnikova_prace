@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class PlayerCombat : MonoBehaviour
 
     private HashSet<Enemy> damagedEnemies = new HashSet<Enemy>(); //hashset nebere duplikaty
 
-    private float attackAnimationTime = 0.7f; 
+    private float attackAnimationTime = 0.45f; 
     private float attackEndTime;
 
     private PlayerMovement playerMovement;
@@ -36,26 +37,46 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time >= nextAttackTime && Input.GetKeyDown(KeyCode.Mouse0) && playerMovement.IsGrounded())
         {
-            isAttacking = true;
-            attackEndTime = Time.time + attackAnimationTime; // When movement should resume
             StartAttack();
+            isAttacking = true;
+            animator.SetBool("isAttacking", true);
+            attackEndTime = Time.time + attackAnimationTime; // When movement should resume
             nextAttackTime = Time.time + 1f / attackRate;
         }
 
         if (Time.time >= attackEndTime)
         {
             isAttacking = false;
+            animator.SetBool("isAttacking", false);
         }
-
+         
     }
     void StartAttack()
     {
-        isAttacking = true;
-        GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
+        //if (canReceiveInput)
+        //{
+            isAttacking = true;
+            GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
 
-        animator.SetTrigger("Attack");
-        nextAttackTime = Time.time + attackCooldown;
+            animator.SetTrigger("Attack");
+            nextAttackTime = Time.time + attackCooldown;
+            //inputReceived = true;
+            //canReceiveInput = false; 
+        //}
     }
+
+    /*public void InputManager ()
+    {
+        if (!canReceiveInput)
+        {
+            canReceiveInput = true;
+        }
+        else
+        {
+            canReceiveInput = false;
+        }
+    }*/
+
 
     public void EnableDamage()
     {
