@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -64,12 +65,20 @@ public class PlayerMovement : MonoBehaviour
         HandleJumpInput();
         HandleDashInput();
         HandleSprintInput();
+
+        if (IsGrounded())
+        {
+            animator.SetBool("isGrounded", true);
+        } else
+        {
+            animator.SetBool("isGrounded", false);
+        }
     }
     private void FixedUpdate()
     {
         if (_isDashing) return;
 
-        if (_playerCombat.isAttacking)
+        if (!CanMove)
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
         }
@@ -80,6 +89,11 @@ public class PlayerMovement : MonoBehaviour
 
         HandleLayers();
     }
+
+    public bool CanMove { get
+        {
+            return animator.GetBool("canMove");
+        } }
 
     public bool IsGrounded()
     {
