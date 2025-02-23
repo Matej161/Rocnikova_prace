@@ -21,7 +21,7 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] float attackCooldown = 0.5f;
 
-    private HashSet<Enemy> damagedEnemies = new HashSet<Enemy>(); //hashset nebere duplikaty
+    private HashSet<EnemyHealth> damagedEnemies = new HashSet<EnemyHealth>(); //hashset nebere duplikaty
 
     private float attackAnimationTime = 0.45f; 
     private float attackEndTime;
@@ -93,11 +93,11 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider2D enemyCollider in hitEnemies)
         {
-            Enemy enemy = enemyCollider.GetComponent<Enemy>();  
-            if (enemy != null && !damagedEnemies.Contains(enemy))  //jestli uz je enemy v hashsetu tak se if neprovede
+            EnemyHealth enemyHealth = enemyCollider.GetComponent<EnemyHealth>();  
+            if (enemyHealth != null && !damagedEnemies.Contains(enemyHealth))  //jestli uz je enemy v hashsetu tak se if neprovede
             {
-                enemy.TakeDamage(attackDamage);
-                damagedEnemies.Add(enemy);
+                enemyHealth.TakeDamage(attackDamage);
+                damagedEnemies.Add(enemyHealth);
             }
         }
     }

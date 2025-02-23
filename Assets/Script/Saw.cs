@@ -10,6 +10,7 @@ public class Saw : MonoBehaviour
     private bool movingLeft;
     private float leftEdge;
     private float rightEdge;
+    public Collider2D collision;
 
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class Saw : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            collision.GetComponent<Health>().TakeDamage(damage);
+            collision.GetComponent<Health>().TakeDamage(damage, transform);
         }
     }
 }

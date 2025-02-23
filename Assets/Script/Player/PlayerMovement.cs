@@ -1,12 +1,12 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private TrailRenderer tr;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Animator animator;
@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _currentSpeed;
-    [SerializeField] private float _sprintMultiplier = 2f;
     [SerializeField] private float _jumpingPower;
 
     [Header("Dash")]
@@ -23,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _dashingTime;
     private float _dashingCooldown = 1f;
     private bool _canDash = true;
-    private bool _isDashing;
+    public bool _isDashing;
 
     private float _horizontalInput;
     private bool _isFacingRight = true;
@@ -33,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         _playerCombat = GetComponent<PlayerCombat>();
+
+        _currentSpeed = _moveSpeed;
     }
 
     void Update()
@@ -61,10 +62,10 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("falling", true);
         }
 
+
         HandleMovementInput();
         HandleJumpInput();
         HandleDashInput();
-        HandleSprintInput();
 
         if (IsGrounded())
         {
@@ -135,22 +136,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void HandleSprintInput()
-    {
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            _currentSpeed = _moveSpeed * _sprintMultiplier;
-            animator.SetTrigger("IsSprinting");
-            animator.ResetTrigger("NotSprinting");
-        }
-        else
-        {
-            _currentSpeed = _moveSpeed;
-            animator.SetTrigger("NotSprinting");
-            animator.ResetTrigger("IsSprinting");
-        }
-    }
-
     private void Flip()
     {
         if (_isFacingRight && _horizontalInput < 0f || !_isFacingRight && _horizontalInput > 0f)
@@ -168,10 +153,8 @@ public class PlayerMovement : MonoBehaviour
         _isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        rb.velocity = new Vector2(transform.localScale.x * _dashingPower, rb.velocity.y);
-        tr.emitting = true;
+        rb.velocity = new Vector2(transform.localScale.x * _dashingPower, 0);
         yield return new WaitForSeconds(_dashingTime);
-        tr.emitting = false;
         rb.gravityScale = originalGravity;
         _isDashing = false;
         yield return new WaitForSeconds(_dashingCooldown);
@@ -191,4 +174,22 @@ public class PlayerMovement : MonoBehaviour
             animator.SetLayerWeight(1, 0);
         }
     }
+
+    public void DisableMovement(float duration)
+    {
+        StartCoroutine(StopMovement(duration));
+    }
+
+    private IEnumerator StopMovement(float duration)
+    {
+        enabled = false; 
+        yield return new WaitForSeconds(duration);
+        enabled = true;  
+    }
+
+    public bool canAttack()
+    {
+        return _horizontalInput == 0 && IsGrounded();
+    }
+
 }
