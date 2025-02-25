@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsGrounded())
         {
-            animator.ResetTrigger("jump");
+            //animator.ResetTrigger("jump");
             animator.SetBool("falling", false);
         }
 
@@ -116,15 +116,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump") && IsGrounded() && !_playerCombat.isAttacking)
         {
-            rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
             animator.SetTrigger("jump");
+            rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
         }
 
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f && !_playerCombat.isAttacking)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
             animator.SetBool("falling", true);
-            animator.ResetTrigger("jump");
+            //animator.ResetTrigger("jump");
         }
     }
 

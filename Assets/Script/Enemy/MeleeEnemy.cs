@@ -22,18 +22,20 @@ public class MeleeEnemy : MonoBehaviour
     private Animator anim;
     private Health playerHealth;
     private EnemyPatrolling enemyPatrol;
+    private EnemyHealth enemyHealth;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         enemyPatrol = GetComponentInParent<EnemyPatrolling>();
+        enemyHealth = GetComponent<EnemyHealth>();
     }
 
     private void Update()
     {
         cooldownTimer += Time.deltaTime;
 
-        if (PlayerInSight())
+        if (PlayerInAttackRange())
         {
             if (cooldownTimer >= attackCooldown)
             {
@@ -43,10 +45,10 @@ public class MeleeEnemy : MonoBehaviour
         }
 
         if (enemyPatrol != null)
-            enemyPatrol.enabled = !PlayerInSight();
+            enemyPatrol.enabled = !PlayerInAttackRange();
     }
 
-    private bool PlayerInSight()
+    private bool PlayerInAttackRange()
     {
         RaycastHit2D hit =
             Physics2D.BoxCast(boxCollider.bounds.center + transform.right * range * transform.localScale.x * colliderDistance,
@@ -67,7 +69,7 @@ public class MeleeEnemy : MonoBehaviour
 
     private void DamagePlayer()
     {
-        if (PlayerInSight())
+        if (PlayerInAttackRange())
             playerHealth.TakeDamage(damage, transform);
     }
 }

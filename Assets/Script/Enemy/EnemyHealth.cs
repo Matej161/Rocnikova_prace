@@ -33,18 +33,34 @@ public class EnemyHealth : MonoBehaviour
         {
             if (!dead)
             {
+                dead = true;
                 anim.SetTrigger("die");
 
-                if (GetComponent<EnemyPatrolling>() != null)
-                    GetComponent<EnemyPatrolling>().enabled = false;
+                GetComponent<MeleeEnemy>().enabled = false;
 
-                if (GetComponent<MeleeEnemy>())
-                    GetComponent<MeleeEnemy>().enabled = false;
-                
-                dead = true;
+                GetComponentInParent<EnemyPatrolling>().speed = 0;
+
+                GetComponentInParent<EnemyPatrolling>().enabled = false;
+
+                StartCoroutine(DestroyAfterTime(5f));
             }
         }
     }
+    private IEnumerator DestroyAfterTime(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Color color = spriteRend.color;
+
+        for (float t = 0; t < 1; t += Time.deltaTime / 1.5f) // 1.5s fade-out
+        {
+            spriteRend.color = new Color(color.r, color.g, color.b, Mathf.Lerp(1, 0, t));
+            yield return null;
+        }
+
+        Destroy(gameObject);
+    }
+
     public void AddHealth(float _value)
     {
         currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
