@@ -67,9 +67,9 @@ public class MeleeEnemy : MonoBehaviour
             new Vector3(boxCollider.bounds.size.x * range, boxCollider.bounds.size.y, boxCollider.bounds.size.z));
     }
 
-    private void DamagePlayer()
+    /*private void DamagePlayer()
     {
         if (PlayerInAttackRange())
             playerHealth.TakeDamage(damage, transform);
-    }
+    }*/
 }

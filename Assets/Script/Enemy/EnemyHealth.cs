@@ -36,11 +36,11 @@ public class EnemyHealth : MonoBehaviour
                 dead = true;
                 anim.SetTrigger("die");
 
-                GetComponent<MeleeEnemy>().enabled = false;
+                GetComponent<MeleeEnemyAttack>().enabled = false;
 
-                GetComponentInParent<EnemyPatrolling>().speed = 0;
+                GetComponentInParent<EnemyPatrolChase>().speed = 0;
 
-                GetComponentInParent<EnemyPatrolling>().enabled = false;
+                GetComponentInParent<EnemyPatrolChase>().enabled = false;
 
                 StartCoroutine(DestroyAfterTime(5f));
             }

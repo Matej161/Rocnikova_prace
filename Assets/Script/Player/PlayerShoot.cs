@@ -10,12 +10,15 @@ public class PlayerShoot : MonoBehaviour
 
     private Animator anim;
     private PlayerMovement playerMovement;
+    private PlayerDaggerInventory inventory;
+
     private float cooldownTimer = Mathf.Infinity;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
+        inventory = GetComponent<PlayerDaggerInventory>();
     }
 
     private void Update()
@@ -28,13 +31,19 @@ public class PlayerShoot : MonoBehaviour
 
     private void Attack()
     {
-        anim.SetTrigger("Shoot");
-        cooldownTimer = 0;
+        if (inventory.daggerCount > 0)
+        {
+            anim.SetTrigger("Shoot");
+            cooldownTimer = 0;
 
-        daggers[FindFireball()].transform.position = firePoint.position;
-        daggers[FindFireball()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
+            daggers[FindDagger()].transform.position = firePoint.position;
+            daggers[FindDagger()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
+        } else
+        {
+            Debug.Log("no daggers");
+        }
     }
-    private int FindFireball()
+    private int FindDagger()
     {
         for (int i = 0; i < daggers.Length; i++)
         {

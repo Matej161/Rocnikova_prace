@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public bool _isDashing;
 
     private float _horizontalInput;
-    private bool _isFacingRight = true;
+    public bool _isFacingRight = true;
 
     private void Start()
     {
@@ -136,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void Flip()
+    public void Flip()
     {
         if (_isFacingRight && _horizontalInput < 0f || !_isFacingRight && _horizontalInput > 0f)
         {
@@ -160,7 +160,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(_dashingCooldown);
         _canDash = true;
         animator.SetBool("IsDashing", false);
-        animator.Play("PlayerRoll");
+        //animator.Play("PlayerRoll");
     }
 
     private void HandleLayers()
