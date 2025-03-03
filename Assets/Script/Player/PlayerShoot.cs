@@ -33,6 +33,7 @@ public class PlayerShoot : MonoBehaviour
     {
         if (inventory.daggerCount > 0)
         {
+            inventory.RemoveDagger();
             anim.SetTrigger("Shoot");
             cooldownTimer = 0;
 

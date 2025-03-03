@@ -7,15 +7,15 @@ public class DaggerCollectible : MonoBehaviour
 
     void Awake()
     {
-        daggerInventory = GetComponent<PlayerDaggerInventory>();
+        daggerInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerDaggerInventory>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("colliding with player");
-            collision.GetComponent<PlayerDaggerInventory>().AddDagger();
+            daggerInventory.AddDagger();
+            Debug.Log("add dagger");
             Destroy(gameObject);
         }
     }

@@ -3,14 +3,19 @@ using System.Collections;
 
 public class PlayerDaggerInventory : MonoBehaviour
 {
-    [SerializeField] public int daggerCount { get; private set; } = 0;
+    public int daggerCount = 0;
 
     public void AddDagger()
     {
         daggerCount++;
     }
 
-    public bool UseDagger()
+    public void RemoveDagger()
+    {
+        daggerCount--;
+    }
+
+    /*public bool UseDagger()
     {
         if (daggerCount > 0)
         {
@@ -18,5 +23,5 @@ public class PlayerDaggerInventory : MonoBehaviour
             return true;
         }
         return false;
-    }
+    }*/
 }
