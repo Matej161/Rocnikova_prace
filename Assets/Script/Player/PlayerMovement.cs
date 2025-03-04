@@ -182,9 +182,9 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator StopMovement(float duration)
     {
-        enabled = false; 
+        enabled = false;
         yield return new WaitForSeconds(duration);
-        enabled = true;  
+        enabled = true;
     }
 
     public bool canAttack()

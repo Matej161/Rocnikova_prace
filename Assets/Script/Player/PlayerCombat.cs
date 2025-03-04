@@ -40,7 +40,7 @@ public class PlayerCombat : MonoBehaviour
             StartAttack();
             isAttacking = true;
             animator.SetBool("isAttacking", true);
-            attackEndTime = Time.time + attackAnimationTime; // When movement should resume
+            attackEndTime = Time.time + attackAnimationTime; 
             nextAttackTime = Time.time + 1f / attackRate;
         }
 
@@ -53,30 +53,14 @@ public class PlayerCombat : MonoBehaviour
     }
     void StartAttack()
     {
-        //if (canReceiveInput)
-        //{
-            isAttacking = true;
-            GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
+        if (!playerMovement.enabled) 
+            return;
+        isAttacking = true;
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
 
-            animator.SetTrigger("Attack");
-            nextAttackTime = Time.time + attackCooldown;
-            //inputReceived = true;
-            //canReceiveInput = false; 
-        //}
+        animator.SetTrigger("Attack");
+        nextAttackTime = Time.time + attackCooldown;
     }
-
-    /*public void InputManager ()
-    {
-        if (!canReceiveInput)
-        {
-            canReceiveInput = true;
-        }
-        else
-        {
-            canReceiveInput = false;
-        }
-    }*/
-
 
     public void EnableDamage()
     {

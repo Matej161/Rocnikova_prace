@@ -33,7 +33,7 @@ public class Health : MonoBehaviour
         if (currentHealth > 0)
         {
             anim.SetTrigger("hurt");
-            GetComponent<PlayerMovement>().DisableMovement(0.2f);
+            GetComponent<PlayerMovement>().DisableMovement(.2f);
 
             float knockbackDirection;
             if (transform.position.x >= enemyPosition.position.x)
@@ -45,8 +45,8 @@ public class Health : MonoBehaviour
                 knockbackDirection = -1f;
             }
 
-            rb.velocity = new Vector2(knockbackDirection * XKnockbackPower, YKnockbackPower); 
-
+            rb.velocity = new Vector2(knockbackDirection * XKnockbackPower, YKnockbackPower);
+            Debug.Log("Knockback applied: " + rb.velocity);
         }
         else
         {
