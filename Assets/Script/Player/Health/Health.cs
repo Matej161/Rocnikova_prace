@@ -9,7 +9,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float startingHealth;
     [SerializeField] public float currentHealth { get; private set; }
     private Animator anim;
-    [SerializeField] private bool dead;
+    [SerializeField] public bool dead;
     public Rigidbody2D rb;
 
     public GameObject healthCollectible;
@@ -46,7 +46,6 @@ public class Health : MonoBehaviour
             }
 
             rb.velocity = new Vector2(knockbackDirection * XKnockbackPower, YKnockbackPower);
-            Debug.Log("Knockback applied: " + rb.velocity);
         }
         else
         {

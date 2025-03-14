@@ -34,11 +34,13 @@ public class EnemyPatrolChase : MonoBehaviour
     public LayerMask obstacleLayer; 
 
     private bool isChasing = false;
+    private Health playerHealth;
 
     private void Awake()
     {
         initScale = enemy.localScale;
         player = GameObject.FindGameObjectWithTag("Player").transform; 
+        playerHealth = player.GetComponent<Health>();
     }
 
     private void OnDisable()
@@ -48,6 +50,11 @@ public class EnemyPatrolChase : MonoBehaviour
 
     private void Update()
     {
+        if (playerHealth.dead)
+        {
+            Patrol();
+            return;
+        }
 
         float distanceToPlayer = Vector2.Distance(enemy.position, player.position);
 
