@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ParallaxController : MonoBehaviour
 {
     Transform cam; 
     Vector3 camStartPos;
-    float distance;
+    float distance; 
 
     GameObject[] backgrounds;
     Material[] mat;
@@ -15,8 +14,11 @@ public class ParallaxController : MonoBehaviour
 
     float farthestBack;
 
-    [Range(0.01f, 0.05f)]
+    [Range(0.01f, 0.1f)]
     public float parallaxSpeed;
+
+    [SerializeField] private float xOffset;
+    [SerializeField] private float yOffset;
 
     void Start()
     {
@@ -56,7 +58,7 @@ public class ParallaxController : MonoBehaviour
     private void LateUpdate()
     {
         distance = cam.position.x - camStartPos.x;
-        transform.position = new Vector3(cam.position.x, transform.position.y, 0);
+        transform.position = new Vector2(cam.position.x - xOffset, cam.position.y - yOffset);
 
         for (int i = 0; i < backgrounds.Length; i++)
         {

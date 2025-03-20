@@ -28,7 +28,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (isIdle) return; // If idling, don't move
+        if (isIdle) return;
 
         bool playerInRange = Vector2.Distance(transform.position, player.position) <= detectionRange;
 

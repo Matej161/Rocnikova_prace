@@ -51,16 +51,8 @@ public class EnemyAIController : MonoBehaviour
 
         Vector2 directionToPlayer = (player.transform.position - transform.position).normalized;
 
-        // Flip if needed
         if ((directionToPlayer.x > 0 && !playerMovement._isFacingRight) || (directionToPlayer.x < 0 && playerMovement._isFacingRight))
             Flip();
-
-        /*if (CheckForWall() || CheckForLedge())
-        {
-            rb.velocity = new Vector2(0, rb.velocity.y); // Stop movement if obstacle
-            return;
-        } */
-
         transform.position += new Vector3(directionToPlayer.x * chaseSpeed * Time.deltaTime, 0, 0);
     }
     void Flip()
@@ -72,17 +64,14 @@ public class EnemyAIController : MonoBehaviour
     }
     void OnDrawGizmosSelected()
     {
-        if (player == null) return; // Avoid errors
+        if (player == null) return;
 
-        // Set Gizmo color
         Gizmos.color = Color.cyan;
 
-        // Draw a line from enemy to player
         Gizmos.DrawLine(transform.position, player.transform.position);
 
-        // Draw the distance as text (optional, only visible in Scene View)
         UnityEditor.Handles.Label(
-            (transform.position + player.transform.position) / 2, // Midpoint
+            (transform.position + player.transform.position) / 2, 
             $"Distance: {Vector2.Distance(transform.position, player.transform.position):F2}"
         );
     }
