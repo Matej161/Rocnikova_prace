@@ -65,7 +65,7 @@ public class EnemyHealth : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
     }
-    private IEnumerator Invunerability()
+    public IEnumerator Invunerability()
     {
         Physics2D.IgnoreLayerCollision(10, 11, true);
         for (int i = 0; i < numberOfFlashes; i++)

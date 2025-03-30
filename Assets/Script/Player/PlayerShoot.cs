@@ -11,6 +11,7 @@ public class PlayerShoot : MonoBehaviour
     private Animator anim;
     private PlayerMovement playerMovement;
     private PlayerDaggerInventory inventory;
+    public SpriteRenderer playerSprite;
 
     private float cooldownTimer = Mathf.Infinity;
 
@@ -19,6 +20,7 @@ public class PlayerShoot : MonoBehaviour
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
         inventory = GetComponent<PlayerDaggerInventory>();
+        playerSprite = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -27,6 +29,8 @@ public class PlayerShoot : MonoBehaviour
             Attack();
 
         cooldownTimer += Time.deltaTime;
+
+        
     }
 
     private void Attack()
@@ -42,6 +46,7 @@ public class PlayerShoot : MonoBehaviour
         } else
         {
             Debug.Log("no daggers");
+            //neco aby se stalo kdyz ykusim strilet bez naboju
         }
     }
     private int FindDagger()
