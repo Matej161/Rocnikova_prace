@@ -15,6 +15,8 @@ public class PlayerShoot : MonoBehaviour
 
     private float cooldownTimer = Mathf.Infinity;
 
+    [SerializeField] private DIsplayDaggerCount daggerDisplay;
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -29,11 +31,9 @@ public class PlayerShoot : MonoBehaviour
             Attack();
 
         cooldownTimer += Time.deltaTime;
-
-        
     }
 
-    private void Attack()
+    public void Attack()
     {
         if (inventory.daggerCount > 0)
         {
@@ -45,8 +45,7 @@ public class PlayerShoot : MonoBehaviour
             daggers[FindDagger()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
         } else
         {
-            Debug.Log("no daggers");
-            //neco aby se stalo kdyz ykusim strilet bez naboju
+            daggerDisplay.FlashRed();
         }
     }
     private int FindDagger()

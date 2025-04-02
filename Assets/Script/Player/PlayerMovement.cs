@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
@@ -27,6 +28,9 @@ public class PlayerMovement : MonoBehaviour
     private float _horizontalInput;
     public bool _isFacingRight = true;
 
+    private bool _isJumping = false;
+    private int _airLayerIndex; 
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -34,6 +38,12 @@ public class PlayerMovement : MonoBehaviour
         _playerCombat = GetComponent<PlayerCombat>();
 
         _currentSpeed = _moveSpeed;
+
+        _airLayerIndex = animator.GetLayerIndex("AirLayer");
+        if (_airLayerIndex == -1)
+        {
+            Debug.LogError("Animator Layer 'Air' not found!");
+        }
     }
 
     void Update()
@@ -114,17 +124,49 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJumpInput()
     {
-        if (Input.GetButtonDown("Jump") && IsGrounded() && !_playerCombat.isAttacking)
+        bool grounded = IsGrounded();
+
+        if (Input.GetButtonDown("Jump") && grounded && !_playerCombat.isAttacking)
         {
             animator.SetTrigger("jump");
             rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
+            _isJumping = true;
+            Debug.Log("Jump Initiated (GetButtonDown)");    
+
+            animator.SetLayerWeight(_airLayerIndex, 1f);
         }
 
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f && !_playerCombat.isAttacking)
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f && !_playerCombat.isAttacking) 
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-            animator.SetBool("falling", true);
-            //animator.ResetTrigger("jump");
+            _isJumping = false; 
+            Debug.Log("Jump Released Early (GetButtonUp)");
+        }
+    }
+
+    private void HandleAirborneState()
+    {
+        bool grounded = IsGrounded();
+
+        if (grounded)
+        {
+            animator.SetBool("falling", false); 
+            _isJumping = false; 
+            
+            animator.SetLayerWeight(_airLayerIndex, Mathf.Lerp(animator.GetLayerWeight(_airLayerIndex), 0f, Time.deltaTime * 10f)); 
+        }
+        else 
+        {
+            animator.SetLayerWeight(_airLayerIndex, Mathf.Lerp(animator.GetLayerWeight(_airLayerIndex), 1f, Time.deltaTime * 10f)); 
+
+            if (rb.velocity.y < 0 && !_isJumping) 
+            {
+                animator.SetBool("falling", true);
+            }
+            else if (rb.velocity.y >= 0)
+            {
+                animator.SetBool("falling", false);
+            }
         }
     }
 

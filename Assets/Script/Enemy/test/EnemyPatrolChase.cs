@@ -36,11 +36,16 @@ public class EnemyPatrolChase : MonoBehaviour
     private bool isChasing = false;
     private Health playerHealth;
 
+    [SerializeField] bool YMovement;
+    private float initialY;
+
     private void Awake()
     {
         initScale = enemy.localScale;
         player = GameObject.FindGameObjectWithTag("Player").transform; 
         playerHealth = player.GetComponent<Health>();
+
+        initialY = enemy.position.y;
     }
 
     private void OnDisable()
@@ -105,6 +110,10 @@ public class EnemyPatrolChase : MonoBehaviour
             else
                 DirectionChange();
         }
+        if (YMovement)
+        {
+            enemy.position = new Vector3(enemy.position.x, Mathf.Lerp(enemy.position.y, initialY, Time.deltaTime * 1), enemy.position.z);
+        }
     }
     private void AttackPlayer()
     {
@@ -153,6 +162,17 @@ public class EnemyPatrolChase : MonoBehaviour
             Vector2 direction = (player.position - enemy.position).normalized;
             enemy.position = Vector2.MoveTowards(new Vector2(enemy.position.x, transform.position.y), 
             new Vector2(player.position.x, transform.position.y), chaseSpeed * Time.deltaTime);
+
+            if (!YMovement)
+            {
+                enemy.position = Vector2.MoveTowards(new Vector2(enemy.position.x, transform.position.y),
+                new Vector2(player.position.x, transform.position.y), chaseSpeed * Time.deltaTime);
+            }
+            else if(YMovement)
+            {
+                enemy.position = Vector2.MoveTowards(new Vector2(enemy.position.x, transform.position.y),
+                new Vector2(player.position.x, player.position.y), chaseSpeed * Time.deltaTime);
+            }
         }
     }
     private void OnDrawGizmos()

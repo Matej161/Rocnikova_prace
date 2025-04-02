@@ -14,14 +14,4 @@ public class PlayerDaggerInventory : MonoBehaviour
     {
         daggerCount--;
     }
-
-    /*public bool UseDagger()
-    {
-        if (daggerCount > 0)
-        {
-            daggerCount--;
-            return true;
-        }
-        return false;
-    }*/
 }

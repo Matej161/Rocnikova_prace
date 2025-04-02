@@ -3,66 +3,55 @@ using UnityEngine;
 public class MovingPlatform : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float speed = 2.0f; // Speed of the platform
-    [SerializeField] private float moveDistance = 5.0f; // Total distance the platform moves horizontally
+    [SerializeField] private float speed = 2.0f;
+    [SerializeField] private float moveDistance = 5.0f;
 
     [Header("Player Interaction")]
-    [SerializeField] private string playerTag = "Player"; // Tag of the player GameObject
+    [SerializeField] private string playerTag = "Player";
 
     private Vector3 startPosition;
     private Vector3 leftTarget;
     private Vector3 rightTarget;
     private Vector3 currentTarget;
     private bool movingRight = true;
+    private bool movingUp= true;
 
-    // --- Initialization ---
+    [SerializeField] private bool horizontalMovement = true;
+
     void Start()
     {
-        // Store the initial position as the center of the movement
         startPosition = transform.position;
 
-        // Calculate the left and right endpoints based on the moveDistance
-        // We move distance/2 left and distance/2 right from the start position
         leftTarget = startPosition - Vector3.right * (moveDistance / 2f);
         rightTarget = startPosition + Vector3.right * (moveDistance / 2f);
 
-        // Set the initial target based on the starting direction
         currentTarget = rightTarget;
     }
 
-    // --- Movement Logic ---
     void Update()
     {
-        // Calculate the movement step for this frame (frame-rate independent)
         float step = speed * Time.deltaTime;
 
-        // Move the platform towards the current target position
         transform.position = Vector3.MoveTowards(transform.position, currentTarget, step);
 
-        // Check if the platform has reached the current target
-        // Use a small tolerance to avoid floating point inaccuracies
         if (Vector3.Distance(transform.position, currentTarget) < 0.01f)
         {
-            // Switch direction
+            // Switch smeru
             if (movingRight)
             {
-                currentTarget = leftTarget; // Target the left point
+                currentTarget = leftTarget;
                 movingRight = false;
             }
             else
             {
-                currentTarget = rightTarget; // Target the right point
+                currentTarget = rightTarget;
                 movingRight = true;
             }
         }
     }
 
-    // --- Player Attachment Logic ---
-
-    // Called when another Collider2D enters contact with this platform's Collider2D
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if the colliding object is the player
         if (collision.gameObject.CompareTag(playerTag))
         {
             // Check if the player landed on TOP of the platform
