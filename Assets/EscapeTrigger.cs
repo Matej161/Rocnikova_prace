@@ -1,0 +1,130 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
+
+public class EscapeTrigger : MonoBehaviour
+{
+    public CrystalTracker crystalTracker;
+    public TMP_Text hintText;
+    public Image whiteFade;
+    public Transform tpPosition;
+    public Health playerHealth;
+
+    private bool deathTriggered = false;
+
+    private void Update()
+    {
+        if (playerHealth.dead && !deathTriggered)
+        {
+            deathTriggered = true;
+            StartCoroutine(DeathScreen());
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (crystalTracker.collectedCrystals < 4)
+            {
+                StartCoroutine(ShowHint());
+            }
+            else
+            {
+                StartCoroutine(Escape());
+            }
+        }
+    }
+
+    IEnumerator ShowHint()
+    {
+        TypewriterText typewriter = hintText.GetComponent<TypewriterText>();
+        if (typewriter == null) typewriter = hintText.AddComponent<TypewriterText>();
+        typewriter.fullText = "The energy here is unstable.\nCollect all the crystals to resonate.";
+        typewriter.StartTyping();
+        yield return new WaitForSeconds(3f);
+        hintText.text = "";
+    }
+
+    IEnumerator DeathScreen()
+    {
+        yield return new WaitForSeconds(1f);
+        whiteFade.color = Color.black;
+        yield return new WaitForSeconds(2f);
+
+        TypewriterText typewriter = hintText.GetComponent<TypewriterText>();
+        if (typewriter == null) typewriter = hintText.AddComponent<TypewriterText>();
+
+        typewriter.fullText = "You died";
+        typewriter.StartTyping(); 
+        yield return new WaitForSeconds(2f); 
+
+        hintText.text = "";
+        typewriter.fullText = "Their only hope";
+        typewriter.StartTyping();
+        yield return new WaitForSeconds(2f);
+
+        hintText.text = "";
+        typewriter.fullText = "Failure";
+        typewriter.StartTyping();
+        yield return new WaitForSeconds(2f);
+
+        hintText.text = "";
+        SceneManager.LoadScene(0);
+    }
+
+    IEnumerator Escape()
+    {
+        //flash
+        float pulseDuration = 2f;
+        for (float t = 0; t < pulseDuration; t += Time.deltaTime)
+        {
+            whiteFade.color = new Color(1, 1, 1, Mathf.PingPong(t, 0.5f));
+            yield return null;
+        }
+
+        float fadeTime = 2f;
+        for (float t = 0; t < fadeTime; t += Time.deltaTime)
+        {
+            whiteFade.color = new Color(1, 1, 1, Mathf.Lerp(0.5f, 1f, t / fadeTime));
+            yield return null;
+        }
+        whiteFade.color = Color.white;
+
+        //teleport
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player.transform.position = tpPosition.position;
+        yield return new WaitForSeconds(1f);
+
+        for (float t = 0; t < fadeTime; t += Time.deltaTime)
+        {
+            whiteFade.color = new Color(1, 1, 1, Mathf.Lerp(1f, 0f, t / fadeTime));
+            yield return null;
+        }
+        whiteFade.color = new Color(1, 1, 1, 0);
+
+        yield return new WaitForSeconds(2f);
+
+        whiteFade.color = Color.black;
+
+        yield return new WaitForSeconds(2f);
+
+        TypewriterText typewriter = hintText.GetComponent<TypewriterText>();
+        if (typewriter == null) typewriter = hintText.AddComponent<TypewriterText>();
+        typewriter.fullText = "The resonance collapses";
+        typewriter.StartTyping(); 
+
+        yield return new WaitForSeconds(5f);
+        typewriter.fullText = "There was never an exit";
+        typewriter.StartTyping(); 
+
+        yield return new WaitForSeconds(5f);
+
+        Destroy(gameObject);
+
+        SceneManager.LoadScene(0);
+    }
+}

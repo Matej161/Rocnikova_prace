@@ -131,7 +131,6 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("jump");
             rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
             _isJumping = true;
-            Debug.Log("Jump Initiated (GetButtonDown)");    
 
             animator.SetLayerWeight(_airLayerIndex, 1f);
         }
@@ -140,7 +139,6 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
             _isJumping = false; 
-            Debug.Log("Jump Released Early (GetButtonUp)");
         }
     }
 

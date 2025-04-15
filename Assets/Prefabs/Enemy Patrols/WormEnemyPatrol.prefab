@@ -104,6 +104,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7065456275415896037}
     m_Modifications:
+    - target: {fileID: 911070273948706583, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c8fb36c9573aec04bb0fe4eac28ec680, type: 3}
+    - target: {fileID: 2174987740203298713, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 2174987740203298713, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.z
+      value: 0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7930596432454419601, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7b264febcdc34c642a0a1ab5dd990aae, type: 2}
+    - target: {fileID: 8626329665869498019, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
+      propertyPath: leftEdge
+      value: 
+      objectReference: {fileID: 11663239527927648}
+    - target: {fileID: 8626329665869498019, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
+      propertyPath: rightEdge
+      value: 
+      objectReference: {fileID: 2362395600591086654}
     - target: {fileID: 547121849558700041, guid: e643b9ddea9cf31459d472debf344c25, type: 3}
       propertyPath: anim
       value: 
@@ -168,34 +192,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2976907419544768017, guid: e643b9ddea9cf31459d472debf344c25, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2976907419544768017, guid: e643b9ddea9cf31459d472debf344c25, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1276132101
+      objectReference: {fileID: 0}
     - target: {fileID: 5496296940587403192, guid: e643b9ddea9cf31459d472debf344c25, type: 3}
       propertyPath: m_Size.y
       value: 3.8698616
       objectReference: {fileID: 0}
-    - target: {fileID: 911070273948706583, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: c8fb36c9573aec04bb0fe4eac28ec680, type: 3}
-    - target: {fileID: 2174987740203298713, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
-      propertyPath: m_SpriteTilingProperty.pivot.x
-      value: 0.37
-      objectReference: {fileID: 0}
-    - target: {fileID: 2174987740203298713, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
-      propertyPath: m_SpriteTilingProperty.border.z
-      value: 0.14
-      objectReference: {fileID: 0}
-    - target: {fileID: 7930596432454419601, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 7b264febcdc34c642a0a1ab5dd990aae, type: 2}
-    - target: {fileID: 8626329665869498019, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
-      propertyPath: leftEdge
-      value: 
-      objectReference: {fileID: 11663239527927648}
-    - target: {fileID: 8626329665869498019, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
-      propertyPath: rightEdge
-      value: 
-      objectReference: {fileID: 2362395600591086654}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -14,6 +14,8 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private int numberOfFlashes;
     private SpriteRenderer spriteRend;
 
+    [SerializeField] public float fadeDelay = 5;
+
     private void Awake()
     {
         currentHealth = startingHealth;
@@ -42,7 +44,7 @@ public class EnemyHealth : MonoBehaviour
 
                 GetComponentInParent<EnemyPatrolChase>().enabled = false;
 
-                StartCoroutine(DestroyAfterTime(5f));
+                StartCoroutine(DestroyAfterTime(fadeDelay));
             }
         }
     }
@@ -52,7 +54,7 @@ public class EnemyHealth : MonoBehaviour
 
         Color color = spriteRend.color;
 
-        for (float t = 0; t < 1; t += Time.deltaTime / 1.5f) // 1.5s fade-out
+        for (float t = 0; t < 1; t += Time.deltaTime / 1.5f) 
         {
             spriteRend.color = new Color(color.r, color.g, color.b, Mathf.Lerp(1, 0, t));
             yield return null;

@@ -14,9 +14,9 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 rightTarget;
     private Vector3 currentTarget;
     private bool movingRight = true;
-    private bool movingUp= true;
+    //private bool movingUp= true;
 
-    [SerializeField] private bool horizontalMovement = true;
+    //[SerializeField] private bool horizontalMovement = true;
 
     void Start()
     {

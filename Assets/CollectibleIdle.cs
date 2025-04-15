@@ -12,12 +12,11 @@ public class FloatingCollectible : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
-        randomOffset = Random.Range(0f, 2f * Mathf.PI); // Randomize starting position
+        randomOffset = Random.Range(0f, 2f * Mathf.PI);
     }
 
     void Update()
     {
-        // Up and down movement using sine wave
         float newY = startPosition.y + Mathf.Sin((Time.time + randomOffset) * floatSpeed) * floatHeight;
         transform.position = new Vector3(startPosition.x, newY, startPosition.z);
     }
