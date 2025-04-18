@@ -35,6 +35,7 @@ public class MeleeEnemyAttack : MonoBehaviour
         {
             cooldownTimer = 0;
             anim.SetTrigger("meleeAttack");
+            //sound effect
         }
     }
     public void DamagePlayer()

@@ -19,6 +19,8 @@ public class Health : MonoBehaviour
     [SerializeField] private float XKnockbackPower;
     [SerializeField] private float YKnockbackPower;
 
+    [SerializeField] AudioClip damageSoundClip;
+    [SerializeField] private float soundVolume;
 
     private void Awake()
     {
@@ -30,10 +32,12 @@ public class Health : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
 
+        SoundFXManager.Instance.PlaySoundFXClip(damageSoundClip, transform, soundVolume);
+
         if (currentHealth > 0)
         {
             anim.SetTrigger("hurt");
-            GetComponent<PlayerMovement>().DisableMovement(.2f);
+            playerMovement.LockMovement(0.2f);
 
             float knockbackDirection;
             if (transform.position.x >= enemyPosition.position.x)

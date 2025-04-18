@@ -29,7 +29,9 @@ public class PlayerMovement : MonoBehaviour
     public bool _isFacingRight = true;
 
     private bool _isJumping = false;
-    private int _airLayerIndex; 
+    private int _airLayerIndex;
+
+    private bool _movementLocked;
 
     private void Start()
     {
@@ -101,10 +103,7 @@ public class PlayerMovement : MonoBehaviour
         HandleLayers();
     }
 
-    public bool CanMove { get
-        {
-            return animator.GetBool("canMove");
-        } }
+    public bool CanMove => !_movementLocked && !_playerCombat.isAttacking && !_isDashing;
 
     public bool IsGrounded()
     {
@@ -215,17 +214,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void DisableMovement(float duration)
+    public void LockMovement(float duration)
     {
-        StartCoroutine(StopMovement(duration));
+        StartCoroutine(LockMovementRoutine(duration));
     }
 
-    private IEnumerator StopMovement(float duration)
+    private IEnumerator LockMovementRoutine(float duration)
     {
-        enabled = false;
+        _movementLocked = true;
         yield return new WaitForSeconds(duration);
-        enabled = true;
+        _movementLocked = false;
     }
+
 
     public bool canAttack()
     {

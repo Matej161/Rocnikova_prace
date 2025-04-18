@@ -176,6 +176,10 @@ PrefabInstance:
       propertyPath: rightEdge
       value: 
       objectReference: {fileID: 4647962489263585239}
+    - target: {fileID: 5788114374238356471, guid: 47c688c85dfdbad42b04394d81c57ca2, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5847085682608833915, guid: 47c688c85dfdbad42b04394d81c57ca2, type: 3}
       propertyPath: m_Name
       value: DinoEnemy

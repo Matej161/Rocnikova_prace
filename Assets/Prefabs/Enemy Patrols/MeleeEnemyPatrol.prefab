@@ -104,6 +104,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5023336176223564005}
     m_Modifications:
+    - target: {fileID: 911070273948706583, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3048358176579841763, guid: b177be4c21eff1d46898c270a78e70a0, type: 3}
       propertyPath: m_Name
       value: SpearEnemy

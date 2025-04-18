@@ -28,6 +28,9 @@ public class PlayerCombat : MonoBehaviour
 
     private PlayerMovement playerMovement;
 
+    [SerializeField] AudioClip swordSoundClip;
+    [SerializeField] private float soundVolume;
+
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -38,6 +41,7 @@ public class PlayerCombat : MonoBehaviour
         if (Time.time >= nextAttackTime && Input.GetKeyDown(KeyCode.Mouse0) && playerMovement.IsGrounded())
         {
             StartAttack();
+            SoundFXManager.Instance.PlaySoundFXClip(swordSoundClip, transform, soundVolume);
             isAttacking = true;
             animator.SetBool("isAttacking", true);
             attackEndTime = Time.time + attackAnimationTime; 
@@ -59,6 +63,7 @@ public class PlayerCombat : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
 
         animator.SetTrigger("Attack");
+        playerMovement.LockMovement(attackAnimationTime);
         nextAttackTime = Time.time + attackCooldown;
     }
 
