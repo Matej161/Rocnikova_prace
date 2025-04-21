@@ -3,22 +3,25 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("References")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Animator animator;
     private PlayerCombat _playerCombat;
+    [SerializeField] private AudioSource footstepAudioSource;
+    [SerializeField] private AudioClip[] footstepClips;
+    [SerializeField] private float footstepVolume = 0.5f;
+    [SerializeField] private AudioClip jumpClip;
+    [SerializeField] private float soundVolume;
 
-    [Header("Movement")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _currentSpeed;
     [SerializeField] private float _jumpingPower;
 
-    [Header("Dash")]
     [SerializeField] private float _dashingPower;
     [SerializeField] private float _dashingTime;
     private float _dashingCooldown = 1f;
@@ -50,41 +53,45 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (_isDashing) return;
-
-        if (_isDashing)
+        if (!PauseMenu.isPaused)
         {
-            animator.SetBool("IsDashing", true);
-            return;
-        }
+            if (_isDashing) return;
 
-        if (!_isDashing)
-        {
-            animator.SetBool("IsDashing", false);
-        }
+            if (_isDashing)
+            {
+                animator.SetBool("IsDashing", true);
+                return;
+            }
 
-        if (IsGrounded())
-        {
-            //animator.ResetTrigger("jump");
-            animator.SetBool("falling", false);
-        }
+            if (!_isDashing)
+            {
+                animator.SetBool("IsDashing", false);
+            }
 
-        if (rb.velocity.y < 0)
-        {
-            animator.SetBool("falling", true);
-        }
+            if (IsGrounded())
+            {
+                //animator.ResetTrigger("jump");
+                animator.SetBool("falling", false);
+            }
+
+            if (rb.velocity.y < 0)
+            {
+                animator.SetBool("falling", true);
+            }
 
 
-        HandleMovementInput();
-        HandleJumpInput();
-        HandleDashInput();
+            HandleMovementInput();
+            HandleJumpInput();
+            //HandleDashInput();
 
-        if (IsGrounded())
-        {
-            animator.SetBool("isGrounded", true);
-        } else
-        {
-            animator.SetBool("isGrounded", false);
+            if (IsGrounded())
+            {
+                animator.SetBool("isGrounded", true);
+            }
+            else
+            {
+                animator.SetBool("isGrounded", false);
+            }
         }
     }
     private void FixedUpdate()
@@ -132,12 +139,14 @@ public class PlayerMovement : MonoBehaviour
             _isJumping = true;
 
             animator.SetLayerWeight(_airLayerIndex, 1f);
+            SoundFXManager.Instance.PlaySoundFXClip(jumpClip, transform, soundVolume);
         }
 
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f && !_playerCombat.isAttacking) 
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
             _isJumping = false; 
+            //SoundFXManager.Instance.PlaySoundFXClip(jumpClip, transform, soundVolume);
         }
     }
 
@@ -171,6 +180,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftShift) && _canDash && !_playerCombat.isAttacking)
         {
+            animator.SetTrigger("IsDashing");
             StartCoroutine(Dash());
         }
     }
@@ -187,7 +197,6 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Dash()
     {
-        animator.SetBool("IsDashing", true);
         _canDash = false;
         _isDashing = true;
         float originalGravity = rb.gravityScale;
@@ -198,7 +207,6 @@ public class PlayerMovement : MonoBehaviour
         _isDashing = false;
         yield return new WaitForSeconds(_dashingCooldown);
         _canDash = true;
-        animator.SetBool("IsDashing", false);
         //animator.Play("PlayerRoll");
     }
 
@@ -232,4 +240,15 @@ public class PlayerMovement : MonoBehaviour
         return _horizontalInput == 0 && IsGrounded();
     }
 
+    public void PlayFootstep()
+    {
+        if (footstepClips.Length > 0 && !footstepAudioSource.isPlaying && IsGrounded())
+        {
+            int index = Random.Range(0, footstepClips.Length);
+            footstepAudioSource.clip = footstepClips[index];
+            footstepAudioSource.volume = footstepVolume;
+            footstepAudioSource.pitch = Random.Range(0.95f, 1.05f);
+            footstepAudioSource.Play();
+        }
+    }
 }

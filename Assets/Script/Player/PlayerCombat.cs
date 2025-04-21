@@ -38,22 +38,22 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-        if (Time.time >= nextAttackTime && Input.GetKeyDown(KeyCode.Mouse0) && playerMovement.IsGrounded())
-        {
-            StartAttack();
-            SoundFXManager.Instance.PlaySoundFXClip(swordSoundClip, transform, soundVolume);
-            isAttacking = true;
-            animator.SetBool("isAttacking", true);
-            attackEndTime = Time.time + attackAnimationTime; 
-            nextAttackTime = Time.time + 1f / attackRate;
+        if (!PauseMenu.isPaused) { 
+            if (Time.time >= nextAttackTime && Input.GetKeyDown(KeyCode.Mouse0) && playerMovement.IsGrounded())
+            {
+                StartAttack();
+                SoundFXManager.Instance.PlaySoundFXClip(swordSoundClip, transform, soundVolume);
+                isAttacking = true;
+                animator.SetBool("isAttacking", true);
+                attackEndTime = Time.time + attackAnimationTime; 
+                nextAttackTime = Time.time + 1f / attackRate;
+            }
+            if (Time.time >= attackEndTime)
+            {
+                isAttacking = false;
+                animator.SetBool("isAttacking", false);
+            }
         }
-
-        if (Time.time >= attackEndTime)
-        {
-            isAttacking = false;
-            animator.SetBool("isAttacking", false);
-        }
-         
     }
     void StartAttack()
     {

@@ -17,6 +17,9 @@ public class PlayerShoot : MonoBehaviour
 
     [SerializeField] private DIsplayDaggerCount daggerDisplay;
 
+    [SerializeField] AudioClip throwSoundClip;
+    [SerializeField] private float soundVolume;
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -27,10 +30,15 @@ public class PlayerShoot : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.F) && cooldownTimer > attackCooldown && playerMovement.canAttack())
-            Attack();
+        if (!PauseMenu.isPaused)
+        {
+            if (Input.GetKey(KeyCode.F) && cooldownTimer > attackCooldown && playerMovement.canAttack())
+            {
+                Attack();
+            }
 
-        cooldownTimer += Time.deltaTime;
+            cooldownTimer += Time.deltaTime;
+        }
     }
 
     public void Attack()
@@ -40,6 +48,7 @@ public class PlayerShoot : MonoBehaviour
             inventory.RemoveDagger();
             anim.SetTrigger("Shoot");
             cooldownTimer = 0;
+            SoundFXManager.Instance.PlaySoundFXClip(throwSoundClip, transform, soundVolume);
 
             daggers[FindDagger()].transform.position = firePoint.position;
             daggers[FindDagger()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));

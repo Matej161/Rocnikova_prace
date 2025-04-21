@@ -14,6 +14,7 @@ public class EscapeTrigger : MonoBehaviour
     public Health playerHealth;
 
     private bool deathTriggered = false;
+    private bool triggerDisabled = false;
 
     private void Update()
     {
@@ -26,8 +27,13 @@ public class EscapeTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (triggerDisabled) return;
+
         if (other.CompareTag("Player"))
         {
+            triggerDisabled = true;
+            StartCoroutine(EnableTriggerAfterDelay(12f));
+
             if (crystalTracker.collectedCrystals < 4)
             {
                 StartCoroutine(ShowHint());
@@ -43,9 +49,17 @@ public class EscapeTrigger : MonoBehaviour
     {
         TypewriterText typewriter = hintText.GetComponent<TypewriterText>();
         if (typewriter == null) typewriter = hintText.AddComponent<TypewriterText>();
-        typewriter.fullText = "The energy here is unstable.\nCollect all the crystals to resonate.";
+        typewriter.fullText = "There’s a pull toward the crystals. Toward something forgotten.";
         typewriter.StartTyping();
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(4f);
+        hintText.text = "";
+        typewriter.fullText = "Collect the four. Maybe then…";
+        typewriter.StartTyping();
+        yield return new WaitForSeconds(4f);
+        hintText.text = "";
+        typewriter.fullText = "It will all make sense.";
+        typewriter.StartTyping();
+        yield return new WaitForSeconds(4f);
         hintText.text = "";
     }
 
@@ -63,20 +77,20 @@ public class EscapeTrigger : MonoBehaviour
         yield return new WaitForSeconds(2f); 
 
         hintText.text = "";
-        typewriter.fullText = "Their only hope";
+        typewriter.fullText = "You will never know";
         typewriter.StartTyping();
         yield return new WaitForSeconds(2f);
 
-        hintText.text = "";
+        /*hintText.text = "";
         typewriter.fullText = "Failure";
         typewriter.StartTyping();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2f);*/
 
         hintText.text = "";
         SceneManager.LoadScene(0);
     }
 
-    IEnumerator Escape()
+    public IEnumerator Escape()
     {
         //flash
         float pulseDuration = 2f;
@@ -126,5 +140,11 @@ public class EscapeTrigger : MonoBehaviour
         Destroy(gameObject);
 
         SceneManager.LoadScene(0);
+    }
+
+    IEnumerator EnableTriggerAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        triggerDisabled = false;
     }
 }

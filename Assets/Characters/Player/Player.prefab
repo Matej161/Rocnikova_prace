@@ -172,7 +172,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 5
+  m_GravityScale: 6
   m_Material: {fileID: 6200000, guid: 481b3c29b9e3b9949bba40b0d134dc6a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -258,6 +258,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   animator: {fileID: 7038891539001772664}
+  footstepAudioSource: {fileID: 0}
+  footstepClips: []
+  footstepVolume: 0.5
+  jumpClip: {fileID: 0}
+  soundVolume: 0
   _moveSpeed: 8
   _currentSpeed: 0
   _jumpingPower: 20
@@ -287,6 +292,8 @@ MonoBehaviour:
   attackRate: 2
   isAttacking: 0
   attackCooldown: 0.5
+  swordSoundClip: {fileID: 0}
+  soundVolume: 0
 --- !u!114 &6886511034211783137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,6 +312,12 @@ MonoBehaviour:
   healthCollectible: {fileID: 0}
   XKnockbackPower: 10
   YKnockbackPower: 10
+  damageSoundClip: {fileID: 0}
+  damageSoundVolume: 0
+  healSoundClip: {fileID: 0}
+  healSoundVolume: 0
+  deathSoundClip: {fileID: 0}
+  deathSoundVolume: 0
 --- !u!114 &1610538422353041010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,6 +343,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  playerSprite: {fileID: 0}
+  daggerDisplay: {fileID: 0}
+  throwSoundClip: {fileID: 0}
+  soundVolume: 0
 --- !u!114 &4460799846624968435
 MonoBehaviour:
   m_ObjectHideFlags: 0

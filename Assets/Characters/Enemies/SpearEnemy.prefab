@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 8232072115023322445}
   - component: {fileID: 8501300783078113911}
   - component: {fileID: 8626329665869498019}
+  - component: {fileID: 6075000501305276932}
+  - component: {fileID: 6737359124835798784}
   m_Layer: 8
   m_Name: SpearEnemy
   m_TagString: Enemy
@@ -170,6 +172,10 @@ MonoBehaviour:
   startingHealth: 3
   dead: 0
   fadeDelay: 5
+  damageSoundClip: {fileID: 8300000, guid: ebb4adff36fd7ff43a3b5f5f46034279, type: 3}
+  soundVolume: 0.1
+  deathSoundClip: {fileID: 8300000, guid: 3c0740e535469db42abd5e9aaeccbedb, type: 3}
+  deathVolume: 2
 --- !u!114 &8501300783078113911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,15 +208,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftEdge: {fileID: 0}
   rightEdge: {fileID: 0}
-  enemy: {fileID: 7153040298516417599}
-  speed: 5
-  chaseSpeed: 4
+  speed: 4
+  chaseSpeed: 5
   idleDuration: 1
-  anim: {fileID: 7930596432454419601}
   visionRange: 5
-  attackRange: 1
+  attackRange: 1.9
   raycastDistance: 2
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 512
-  YMovement: 0
+  anim: {fileID: 7930596432454419601}
+  enemy: {fileID: 7153040298516417599}
+  isFlying: 0
+--- !u!70 &6075000501305276932
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048358176579841763}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.26548004, y: -0.724143}
+  m_Size: {x: 1.2718658, y: 2.6138096}
+  m_Direction: 0
+--- !u!50 &6737359124835798784
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048358176579841763}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 100
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

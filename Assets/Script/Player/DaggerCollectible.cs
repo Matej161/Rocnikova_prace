@@ -5,6 +5,9 @@ public class DaggerCollectible : MonoBehaviour
 {
     private PlayerDaggerInventory daggerInventory;
 
+    [SerializeField] AudioClip collectSoundClip;
+    [SerializeField] private float soundVolume;
+
     void Awake()
     {
         daggerInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerDaggerInventory>();
@@ -15,7 +18,8 @@ public class DaggerCollectible : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             daggerInventory.AddDagger();
-            Debug.Log("add dagger");
+            SoundFXManager.Instance.PlaySoundFXClip(collectSoundClip, transform, soundVolume);
+
             Destroy(gameObject);
         }
     }

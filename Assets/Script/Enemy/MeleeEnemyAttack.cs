@@ -17,7 +17,7 @@ public class MeleeEnemyAttack : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         if (player == null)
-            Debug.LogError("Player object not found!");
+            Debug.LogError("player not found");
     }
 
     private void Update()
@@ -35,7 +35,6 @@ public class MeleeEnemyAttack : MonoBehaviour
         {
             cooldownTimer = 0;
             anim.SetTrigger("meleeAttack");
-            //sound effect
         }
     }
     public void DamagePlayer()

@@ -1,51 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyPatrolChase : MonoBehaviour
 {
-    [Header("Patrol Points")]
     [SerializeField] private Transform leftEdge;
     [SerializeField] private Transform rightEdge;
 
-    [Header("Enemy")]
-    [SerializeField] private Transform enemy;
-
-    [Header("Movement parameters")]
-    public float speed;
-    public float chaseSpeed;
-    private Vector3 initScale;
+    public float speed = 2f;
+    public float chaseSpeed = 3f;
     private bool movingLeft;
+    private Vector3 initScale;
 
-    [Header("Idle Behaviour")]
-    [SerializeField] private float idleDuration;
+    [SerializeField] private float idleDuration = 2f;
     private float idleTimer;
 
-    [Header("Enemy Animator")]
-    [SerializeField] private Animator anim;
-
-    [Header("Player Detection")]
     public float visionRange = 5f;
     public float attackRange = 1f;
-    private Transform player;
-
-    [Header("Obstacle Detection")]
-    public float raycastDistance = 2f; 
+    public float raycastDistance = 2f;
     public LayerMask obstacleLayer; 
 
-    private bool isChasing = false;
+    [SerializeField] private Animator anim;
+    [SerializeField] private Transform enemy; 
+    private Transform player;
     private Health playerHealth;
+    private Rigidbody2D rb;
 
-    [SerializeField] bool YMovement;
+    private bool isChasing = false;
+    [SerializeField] private bool isFlying = false;
     private float initialY;
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
         initScale = enemy.localScale;
-        player = GameObject.FindGameObjectWithTag("Player").transform; 
-        playerHealth = player.GetComponent<Health>();
-
         initialY = enemy.position.y;
+
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (player != null)
+        {
+            playerHealth = player.GetComponent<Health>();
+        }
+
+        rb.freezeRotation = true;
+
+        if (isFlying)
+        {
+            rb.gravityScale = 0f;
+        }
+        else
+        {
+            rb.gravityScale = 1f;
+        }
     }
 
     private void OnDisable()
@@ -55,7 +60,7 @@ public class EnemyPatrolChase : MonoBehaviour
 
     private void Update()
     {
-        if (playerHealth.dead)
+        if (player == null || playerHealth == null || playerHealth.dead)
         {
             Patrol();
             return;
@@ -67,7 +72,7 @@ public class EnemyPatrolChase : MonoBehaviour
         {
             anim.SetBool("moving", false);
             AttackPlayer();
-            return; 
+            return;
         }
 
         if (distanceToPlayer <= visionRange && !IsObstacleInFront())
@@ -80,22 +85,19 @@ public class EnemyPatrolChase : MonoBehaviour
         }
 
         if (isChasing)
-        {
             ChasePlayer();
-        }
         else
-        {
             Patrol();
-        }
-
-        if (IsObstacleInFront())
-        {
-            anim.SetBool("moving", false);
-        }
     }
 
     private void Patrol()
     {
+        if (isFlying)
+        {
+            float newY = Mathf.Lerp(enemy.position.y, initialY, Time.deltaTime * 2f);
+            enemy.position = new Vector3(enemy.position.x, newY, enemy.position.z);
+        }
+
         if (movingLeft)
         {
             if (enemy.position.x >= leftEdge.position.x)
@@ -110,22 +112,23 @@ public class EnemyPatrolChase : MonoBehaviour
             else
                 DirectionChange();
         }
-        if (YMovement)
+    }
+
+    private void MoveInDirection(int dir)
+    {
+        idleTimer = 0;
+        anim.SetBool("moving", true);
+
+        enemy.localScale = new Vector3(Mathf.Abs(initScale.x) * dir, initScale.y, initScale.z);
+
+        if (isFlying)
         {
-            enemy.position = new Vector3(enemy.position.x, Mathf.Lerp(enemy.position.y, initialY, Time.deltaTime * 1), enemy.position.z);
+            rb.velocity = new Vector2(dir * speed, 0f);
         }
-    }
-    private void AttackPlayer()
-    {
-        anim.SetBool("moving", false);
-        GetComponent<MeleeEnemyAttack>().TryAttack();
-    }
-
-    private bool IsObstacleInFront()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(enemy.position, transform.right, raycastDistance, obstacleLayer);
-
-        return hit.collider != null;
+        else
+        {
+            rb.velocity = new Vector2(dir * speed, rb.velocity.y);
+        }
     }
 
     private void DirectionChange()
@@ -135,46 +138,58 @@ public class EnemyPatrolChase : MonoBehaviour
 
         if (idleTimer > idleDuration)
             movingLeft = !movingLeft;
-    }
 
-    private void MoveInDirection(int _direction)
-    {
-        idleTimer = 0;
-        anim.SetBool("moving", true);
-
-        enemy.localScale = new Vector3(Mathf.Abs(initScale.x) * _direction,
-            initScale.y, initScale.z);
-
-        enemy.position = new Vector3(enemy.position.x + Time.deltaTime * _direction * speed,
-            transform.position.y, enemy.position.z);
+        rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
     private void ChasePlayer()
     {
-        if (Vector2.Distance(enemy.position, player.position) > attackRange)
+        int dir;
+
+        if (player.position.x > enemy.position.x)
         {
-            //flip
-            if (player.position.x > enemy.position.x)
-                enemy.localScale = new Vector3(Mathf.Abs(initScale.x), initScale.y, initScale.z);
-            else
-                enemy.localScale = new Vector3(-Mathf.Abs(initScale.x), initScale.y, initScale.z);
+            dir = 1;
+        }
+        else
+        {
+            dir = -1;
+        }
 
-            Vector2 direction = (player.position - enemy.position).normalized;
-            enemy.position = Vector2.MoveTowards(new Vector2(enemy.position.x, transform.position.y), 
-            new Vector2(player.position.x, transform.position.y), chaseSpeed * Time.deltaTime);
+        enemy.localScale = new Vector3(Mathf.Abs(initScale.x) * dir, initScale.y, initScale.z);
+        anim.SetBool("moving", true);
 
-            if (!YMovement)
-            {
-                enemy.position = Vector2.MoveTowards(new Vector2(enemy.position.x, transform.position.y),
-                new Vector2(player.position.x, transform.position.y), chaseSpeed * Time.deltaTime);
-            }
-            else if(YMovement)
-            {
-                enemy.position = Vector2.MoveTowards(new Vector2(enemy.position.x, transform.position.y),
-                new Vector2(player.position.x, player.position.y), chaseSpeed * Time.deltaTime);
-            }
+        if (isFlying)
+        {
+            Vector2 directionToPlayer = (player.position - enemy.position).normalized;
+            rb.velocity = directionToPlayer * chaseSpeed;
+        }
+        else
+        {
+            rb.velocity = new Vector2(dir * chaseSpeed, rb.velocity.y);
         }
     }
+
+    private void AttackPlayer()
+    {
+        anim.SetBool("moving", false);
+        if (isFlying)
+        {
+            rb.velocity = Vector2.zero;
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+        GetComponent<MeleeEnemyAttack>()?.TryAttack();
+    }
+
+    private bool IsObstacleInFront()
+    {
+        Vector2 direction = enemy.localScale.x > 0 ? Vector2.right : Vector2.left;
+        RaycastHit2D hit = Physics2D.Raycast(enemy.position, direction, raycastDistance, obstacleLayer);
+        return hit.collider != null;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

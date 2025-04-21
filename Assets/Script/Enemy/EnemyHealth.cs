@@ -15,6 +15,9 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] AudioClip damageSoundClip;
     [SerializeField] private float soundVolume;
 
+    [SerializeField] AudioClip deathSoundClip;
+    [SerializeField] private float deathVolume;
+
     private void Awake()
     {
         currentHealth = startingHealth;
@@ -35,6 +38,9 @@ public class EnemyHealth : MonoBehaviour
         {
             if (!dead)
             {
+                SoundFXManager.Instance.PlaySoundFXClip(damageSoundClip, transform, soundVolume);
+                SoundFXManager.Instance.PlaySoundFXClip(deathSoundClip, transform, deathVolume);
+
                 dead = true;
                 anim.SetTrigger("die");
 
@@ -43,6 +49,14 @@ public class EnemyHealth : MonoBehaviour
                 GetComponentInParent<EnemyPatrolChase>().speed = 0;
 
                 GetComponentInParent<EnemyPatrolChase>().enabled = false;
+
+                Rigidbody2D rb = GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.velocity = Vector2.zero;
+                    rb.bodyType = RigidbodyType2D.Static;
+                }
+
 
                 StartCoroutine(DestroyAfterTime(fadeDelay));
             }

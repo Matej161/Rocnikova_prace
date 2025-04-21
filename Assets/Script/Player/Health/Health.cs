@@ -20,7 +20,13 @@ public class Health : MonoBehaviour
     [SerializeField] private float YKnockbackPower;
 
     [SerializeField] AudioClip damageSoundClip;
-    [SerializeField] private float soundVolume;
+    [SerializeField] private float damageSoundVolume;
+
+    [SerializeField] AudioClip healSoundClip;
+    [SerializeField] private float healSoundVolume;
+
+    [SerializeField] AudioClip deathSoundClip;
+    [SerializeField] private float deathSoundVolume;
 
     private void Awake()
     {
@@ -32,10 +38,9 @@ public class Health : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
 
-        SoundFXManager.Instance.PlaySoundFXClip(damageSoundClip, transform, soundVolume);
-
         if (currentHealth > 0)
         {
+            SoundFXManager.Instance.PlaySoundFXClip(damageSoundClip, transform, damageSoundVolume);
             anim.SetTrigger("hurt");
             playerMovement.LockMovement(0.2f);
 
@@ -53,6 +58,8 @@ public class Health : MonoBehaviour
         }
         else
         {
+            SoundFXManager.Instance.PlaySoundFXClip(damageSoundClip, transform, damageSoundVolume);
+            SoundFXManager.Instance.PlaySoundFXClip(deathSoundClip, transform, deathSoundVolume);
             if (!dead)
             {
                 dead = true;
@@ -63,7 +70,6 @@ public class Health : MonoBehaviour
 
                 rb.velocity = Vector2.zero;
                 rb.gravityScale = 5f;
-
             }
         }
     }
@@ -73,6 +79,7 @@ public class Health : MonoBehaviour
     {
         if (currentHealth != 0 && currentHealth != startingHealth)
         {
+            SoundFXManager.Instance.PlaySoundFXClip(healSoundClip, transform, healSoundVolume);
             currentHealth++;
             Destroy(collectible);
         }

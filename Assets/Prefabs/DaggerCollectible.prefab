@@ -185,6 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c886a7f1386788a4f9238ff10791ff80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectSoundClip: {fileID: 8300000, guid: 6499c8f6bafd4c047af5a91f64ad299a, type: 3}
+  soundVolume: 0.5
 --- !u!61 &5726760199172190286
 BoxCollider2D:
   m_ObjectHideFlags: 0
