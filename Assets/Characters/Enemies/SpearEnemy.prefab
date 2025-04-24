@@ -171,6 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 3
   dead: 0
+  hitCollider: {fileID: 6075000501305276932}
   fadeDelay: 5
   damageSoundClip: {fileID: 8300000, guid: ebb4adff36fd7ff43a3b5f5f46034279, type: 3}
   soundVolume: 0.1

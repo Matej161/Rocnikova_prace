@@ -22,16 +22,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _currentSpeed;
     [SerializeField] private float _jumpingPower;
 
-    [SerializeField] private float _dashingPower;
-    [SerializeField] private float _dashingTime;
-    private float _dashingCooldown = 1f;
-    private bool _canDash = true;
-    public bool _isDashing;
-
     private float _horizontalInput;
     public bool _isFacingRight = true;
 
-    private bool _isJumping = false;
+    //private bool _isJumping = false;
     private int _airLayerIndex;
 
     private bool _movementLocked;
@@ -55,22 +49,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!PauseMenu.isPaused)
         {
-            if (_isDashing) return;
-
-            if (_isDashing)
-            {
-                animator.SetBool("IsDashing", true);
-                return;
-            }
-
-            if (!_isDashing)
-            {
-                animator.SetBool("IsDashing", false);
-            }
-
             if (IsGrounded())
             {
-                //animator.ResetTrigger("jump");
                 animator.SetBool("falling", false);
             }
 
@@ -82,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
 
             HandleMovementInput();
             HandleJumpInput();
-            //HandleDashInput();
 
             if (IsGrounded())
             {
@@ -96,8 +75,6 @@ public class PlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (_isDashing) return;
-
         if (!CanMove)
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
@@ -110,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
         HandleLayers();
     }
 
-    public bool CanMove => !_movementLocked && !_playerCombat.isAttacking && !_isDashing;
+    public bool CanMove => !_movementLocked && !_playerCombat.isAttacking;
 
     public bool IsGrounded()
     {
@@ -136,7 +113,6 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetTrigger("jump");
             rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
-            _isJumping = true;
 
             animator.SetLayerWeight(_airLayerIndex, 1f);
             SoundFXManager.Instance.PlaySoundFXClip(jumpClip, transform, soundVolume);
@@ -145,43 +121,6 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f && !_playerCombat.isAttacking) 
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-            _isJumping = false; 
-            //SoundFXManager.Instance.PlaySoundFXClip(jumpClip, transform, soundVolume);
-        }
-    }
-
-    private void HandleAirborneState()
-    {
-        bool grounded = IsGrounded();
-
-        if (grounded)
-        {
-            animator.SetBool("falling", false); 
-            _isJumping = false; 
-            
-            animator.SetLayerWeight(_airLayerIndex, Mathf.Lerp(animator.GetLayerWeight(_airLayerIndex), 0f, Time.deltaTime * 10f)); 
-        }
-        else 
-        {
-            animator.SetLayerWeight(_airLayerIndex, Mathf.Lerp(animator.GetLayerWeight(_airLayerIndex), 1f, Time.deltaTime * 10f)); 
-
-            if (rb.velocity.y < 0 && !_isJumping) 
-            {
-                animator.SetBool("falling", true);
-            }
-            else if (rb.velocity.y >= 0)
-            {
-                animator.SetBool("falling", false);
-            }
-        }
-    }
-
-    private void HandleDashInput()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && _canDash && !_playerCombat.isAttacking)
-        {
-            animator.SetTrigger("IsDashing");
-            StartCoroutine(Dash());
         }
     }
 
@@ -194,20 +133,6 @@ public class PlayerMovement : MonoBehaviour
             newScale.x *= -1f;
             transform.localScale = newScale;
         }
-    }
-    private IEnumerator Dash()
-    {
-        _canDash = false;
-        _isDashing = true;
-        float originalGravity = rb.gravityScale;
-        rb.gravityScale = 0f;
-        rb.velocity = new Vector2(transform.localScale.x * _dashingPower, 0);
-        yield return new WaitForSeconds(_dashingTime);
-        rb.gravityScale = originalGravity;
-        _isDashing = false;
-        yield return new WaitForSeconds(_dashingCooldown);
-        _canDash = true;
-        //animator.Play("PlayerRoll");
     }
 
     private void HandleLayers()

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4731901355707598549}
   - component: {fileID: 4699558162311854196}
   - component: {fileID: 5662661607938416596}
+  - component: {fileID: 3337839766734191995}
   m_Layer: 8
   m_Name: FlyingEnemy
   m_TagString: Enemy
@@ -168,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 478bf05fbef2d63429a6a4a93ab8260b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 0.2
+  attackCooldown: 1.5
   damage: 1
   attackRange: 1.5
   playerLayer:
@@ -188,6 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 3
   dead: 0
+  hitCollider: {fileID: 3337839766734191995}
   fadeDelay: 0.5
   damageSoundClip: {fileID: 8300000, guid: ebb4adff36fd7ff43a3b5f5f46034279, type: 3}
   soundVolume: 0.1
@@ -246,3 +248,38 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!70 &3337839766734191995
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248031248424190792}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.021125793, y: 0.021152973}
+  m_Size: {x: 1.348587, y: 1.6446562}
+  m_Direction: 0

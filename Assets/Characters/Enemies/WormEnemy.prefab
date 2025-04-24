@@ -77,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2020701305
-  m_SortingLayer: 3
+  m_SortingLayerID: -1276132101
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c8fb36c9573aec04bb0fe4eac28ec680, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -171,6 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 5
   dead: 0
+  hitCollider: {fileID: 6491551141759948007}
   fadeDelay: 5
   damageSoundClip: {fileID: 8300000, guid: ebb4adff36fd7ff43a3b5f5f46034279, type: 3}
   soundVolume: 0.1
@@ -190,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackCooldown: 1.5
   damage: 1
-  attackRange: 2.3
+  attackRange: 2.15
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -211,8 +212,8 @@ MonoBehaviour:
   speed: 3
   chaseSpeed: 3.5
   idleDuration: 1
-  visionRange: 6.75
-  attackRange: 2.3
+  visionRange: 5
+  attackRange: 2.15
   raycastDistance: 2
   obstacleLayer:
     serializedVersion: 2

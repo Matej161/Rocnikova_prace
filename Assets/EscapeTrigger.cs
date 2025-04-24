@@ -16,6 +16,9 @@ public class EscapeTrigger : MonoBehaviour
     private bool deathTriggered = false;
     private bool triggerDisabled = false;
 
+    [SerializeField] AudioClip endingSoundClip;
+    [SerializeField] private float endingSoundVolume;
+
     private void Update()
     {
         if (playerHealth.dead && !deathTriggered)
@@ -49,15 +52,11 @@ public class EscapeTrigger : MonoBehaviour
     {
         TypewriterText typewriter = hintText.GetComponent<TypewriterText>();
         if (typewriter == null) typewriter = hintText.AddComponent<TypewriterText>();
-        typewriter.fullText = "There’s a pull toward the crystals. Toward something forgotten.";
+        typewriter.fullText = "There’s a pull toward the crystals.";
         typewriter.StartTyping();
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(3f);
         hintText.text = "";
-        typewriter.fullText = "Collect the four. Maybe then…";
-        typewriter.StartTyping();
-        yield return new WaitForSeconds(4f);
-        hintText.text = "";
-        typewriter.fullText = "It will all make sense.";
+        typewriter.fullText = "Collect the four.\nMaybe then… it will all make sense.";
         typewriter.StartTyping();
         yield return new WaitForSeconds(4f);
         hintText.text = "";
@@ -66,6 +65,12 @@ public class EscapeTrigger : MonoBehaviour
     IEnumerator DeathScreen()
     {
         yield return new WaitForSeconds(1f);
+        float fadeTime = 2f;
+        for (float t = 0; t < fadeTime; t += Time.deltaTime)
+        {
+            whiteFade.color = new Color(0, 0, 0, Mathf.Lerp(0.5f, 1f, t / fadeTime));
+            yield return null;
+        }
         whiteFade.color = Color.black;
         yield return new WaitForSeconds(2f);
 
@@ -81,17 +86,13 @@ public class EscapeTrigger : MonoBehaviour
         typewriter.StartTyping();
         yield return new WaitForSeconds(2f);
 
-        /*hintText.text = "";
-        typewriter.fullText = "Failure";
-        typewriter.StartTyping();
-        yield return new WaitForSeconds(2f);*/
-
         hintText.text = "";
         SceneManager.LoadScene(0);
     }
 
     public IEnumerator Escape()
     {
+        SoundFXManager.Instance.PlaySoundFXClip(endingSoundClip, transform, endingSoundVolume);
         //flash
         float pulseDuration = 2f;
         for (float t = 0; t < pulseDuration; t += Time.deltaTime)
@@ -128,7 +129,7 @@ public class EscapeTrigger : MonoBehaviour
 
         TypewriterText typewriter = hintText.GetComponent<TypewriterText>();
         if (typewriter == null) typewriter = hintText.AddComponent<TypewriterText>();
-        typewriter.fullText = "The resonance collapses";
+        typewriter.fullText = "You remembered...";
         typewriter.StartTyping(); 
 
         yield return new WaitForSeconds(5f);
@@ -142,7 +143,7 @@ public class EscapeTrigger : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    IEnumerator EnableTriggerAfterDelay(float delay)
+    public IEnumerator EnableTriggerAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         triggerDisabled = false;

@@ -171,6 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 3
   dead: 0
+  hitCollider: {fileID: 1173519668285656753}
   fadeDelay: 1
   damageSoundClip: {fileID: 8300000, guid: ebb4adff36fd7ff43a3b5f5f46034279, type: 3}
   soundVolume: 0.1
@@ -211,7 +212,7 @@ MonoBehaviour:
   speed: 5
   chaseSpeed: 6
   idleDuration: 0.5
-  visionRange: 4.93
+  visionRange: 3.5
   attackRange: 1.43
   raycastDistance: 2
   obstacleLayer:

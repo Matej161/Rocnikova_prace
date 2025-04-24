@@ -34,7 +34,11 @@ public class CrystalTracker : MonoBehaviour
     {
         TypewriterText typewriter = hintText.GetComponent<TypewriterText>();
         if (typewriter == null) typewriter = hintText.AddComponent<TypewriterText>();
-        typewriter.fullText = "You collected all the sufficient crystals.\nGet back up to resonate.";
+        typewriter.fullText = "You collected all the crystals!\nGet back up to the surface.";
+        typewriter.StartTyping();
+        yield return new WaitForSeconds(3f);
+        hintText.text = "";
+        typewriter.fullText = "Your answers lay by an old tree";
         typewriter.StartTyping();
         yield return new WaitForSeconds(3f);
         hintText.text = "";

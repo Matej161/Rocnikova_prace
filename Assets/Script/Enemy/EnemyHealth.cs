@@ -10,6 +10,8 @@ public class EnemyHealth : MonoBehaviour
 
     private SpriteRenderer spriteRend;
 
+    [SerializeField] CapsuleCollider2D hitCollider; 
+
     [SerializeField] public float fadeDelay = 5;
 
     [SerializeField] AudioClip damageSoundClip;
@@ -40,6 +42,8 @@ public class EnemyHealth : MonoBehaviour
             {
                 SoundFXManager.Instance.PlaySoundFXClip(damageSoundClip, transform, soundVolume);
                 SoundFXManager.Instance.PlaySoundFXClip(deathSoundClip, transform, deathVolume);
+
+                hitCollider.enabled = false;
 
                 dead = true;
                 anim.SetTrigger("die");

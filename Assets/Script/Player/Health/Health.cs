@@ -74,7 +74,6 @@ public class Health : MonoBehaviour
         }
     }
 
-
     public void Heal(GameObject collectible)
     {
         if (currentHealth != 0 && currentHealth != startingHealth)
@@ -82,10 +81,6 @@ public class Health : MonoBehaviour
             SoundFXManager.Instance.PlaySoundFXClip(healSoundClip, transform, healSoundVolume);
             currentHealth++;
             Destroy(collectible);
-        }
-        else
-        {
-            Debug.Log("HP full");
         }
     }
 }

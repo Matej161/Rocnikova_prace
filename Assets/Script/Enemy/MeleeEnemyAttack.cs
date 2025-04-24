@@ -3,7 +3,7 @@ using UnityEngine;
 public class MeleeEnemyAttack : MonoBehaviour
 {
     [SerializeField] private float attackCooldown = 1f;
-    [SerializeField] private int damage = 10;
+    [SerializeField] private float damage;
     [SerializeField] private float attackRange = 1.5f;
     [SerializeField] private LayerMask playerLayer;
 
