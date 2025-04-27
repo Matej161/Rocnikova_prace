@@ -25,7 +25,6 @@ public class EnemyPatrolChase : MonoBehaviour
     private Health playerHealth;
     private Rigidbody2D rb;
 
-    private bool isChasing = false;
     [SerializeField] private bool isFlying = false;
     private float initialY;
 
@@ -75,19 +74,14 @@ public class EnemyPatrolChase : MonoBehaviour
             return;
         }
 
-        if (distanceToPlayer <= visionRange && !IsObstacleInFront())
+        if (distanceToPlayer <= visionRange)
         {
-            isChasing = true;
-        }
-        else
-        {
-            isChasing = false;
-        }
-
-        if (isChasing)
             ChasePlayer();
+        }
         else
+        {
             Patrol();
+        }
     }
 
     private void Patrol()
